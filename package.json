@@ -14,6 +14,7 @@
     "admin:hash": "tsx scripts/hash-password.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
     "drizzle-orm": "^0.45.4",
