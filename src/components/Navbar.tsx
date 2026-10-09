@@ -1,66 +1,163 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { nav, socials } from "@/lib/data";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { nav } from "@/lib/data";
+
+const links = nav.slice(1);
 
 export default function Navbar() {
   const [active, setActive] = useState("home");
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
+  const pillRef = useRef<HTMLSpanElement>(null);
+  const firstMobileLink = useRef<HTMLAnchorElement>(null);
 
+  // Track the section in view.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const sections = nav.map((n) => document.getElementById(n.href.slice(1)));
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      { rootMargin: "-45% 0px -45% 0px" }
+      (entries) =>
+        entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: "-45% 0px -50% 0px" }
     );
-    sections.forEach((s) => s && observer.observe(s));
+    nav.forEach((n) => {
+      const el = document.getElementById(n.href.slice(1));
+      if (el) observer.observe(el);
+    });
     return () => observer.disconnect();
   }, []);
 
+  // Slide the lime pill behind the active link.
+  useEffect(() => {
+    const move = () => {
+      const pill = pillRef.current;
+      const link = listRef.current?.querySelector<HTMLElement>(`[data-id="${active}"]`);
+      if (!pill) return;
+      if (!link) {
+        pill.style.opacity = "0";
+        return;
+      }
+      pill.style.opacity = "1";
+      pill.style.width = `${link.offsetWidth}px`;
+      pill.style.transform = `translateX(${link.offsetLeft}px)`;
+    };
+    move();
+    window.addEventListener("resize", move);
+    return () => window.removeEventListener("resize", move);
+  }, [active]);
+
+  // Full-screen mobile menu: lock scroll, focus first link, close on Escape.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    root.style.overflow = "hidden";
+    firstMobileLink.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      root.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+    <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
       <nav
-        className={`flex items-center gap-1 rounded-full border border-border bg-bg-elev/80 px-2 py-2 backdrop-blur-md transition-shadow ${
-          scrolled ? "shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]" : ""
-        }`}
+        aria-label="Primary"
+        className="flex w-full max-w-fit items-center justify-between gap-4 rounded-full border border-border-strong bg-surface/80 py-1.5 pl-5 pr-1.5 shadow-[0_12px_40px_-16px_rgb(0_0_0/0.8)] backdrop-blur-xl max-lg:min-w-[min(100%,22rem)]"
       >
-        <a
-          href="#home"
-          className="px-3 font-display text-sm font-semibold tracking-tight text-fg"
-        >
-          ET
+        <a href="#home" aria-label="Eleni Tadese — home" className="display pr-2 text-2xl">
+          Eleni<span className="text-lime">.</span>
         </a>
-        <div className="mx-1 hidden items-center gap-5 px-2 sm:flex">
-          {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              data-active={active === item.href.slice(1)}
-              className={`nav-link text-sm ${
-                active === item.href.slice(1) ? "text-lime" : "text-fg-dim"
-              } hover:text-fg`}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-        <a
-          href="#contact"
-          className="btn-lime rounded-full px-4 py-2 text-sm font-medium"
+
+        <ul ref={listRef} className="relative hidden items-center lg:flex">
+          <span
+            ref={pillRef}
+            aria-hidden
+            className="absolute left-0 top-0 h-full rounded-full bg-lime opacity-0 transition-[transform,width,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          />
+          {links.map((item) => {
+            const id = item.href.slice(1);
+            const current = active === id;
+            return (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  data-id={id}
+                  data-active={current}
+                  aria-current={current ? "location" : undefined}
+                  className={`nav-link block rounded-full px-4 py-2 text-sm transition-colors duration-300 ${
+                    current ? "font-medium text-on-lime" : "text-muted hover:text-fg"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+
+        <button
+          type="button"
+          aria-label="Open menu"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          onClick={() => setOpen(true)}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-lime text-on-lime lg:hidden"
         >
-          Get In Touch
-        </a>
+          <Menu size={18} />
+        </button>
       </nav>
+
+      {open && (
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+          className="fixed inset-0 z-[70] flex flex-col bg-bg/95 px-6 pb-10 pt-6 backdrop-blur-xl lg:hidden"
+        >
+          <div className="flex items-center justify-between">
+            <span className="display text-2xl">
+              Eleni<span className="text-lime">.</span>
+            </span>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setOpen(false)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-border-strong"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <ul className="mt-auto flex flex-col">
+            {nav.map((item, i) => {
+              const current = active === item.href.slice(1);
+              return (
+                <li
+                  key={item.href}
+                  className="rise border-b border-border"
+                  style={{ "--rise-delay": `${i * 50}ms` } as React.CSSProperties}
+                >
+                  <a
+                    ref={i === 0 ? firstMobileLink : undefined}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={current ? "location" : undefined}
+                    className={`flex items-baseline gap-4 py-4 ${current ? "text-lime" : "text-fg"}`}
+                  >
+                    <span className="text-xs tabular-nums text-subtle">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="display text-5xl">{item.label}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </header>
   );
 }

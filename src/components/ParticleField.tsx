@@ -2,86 +2,94 @@
 
 import { useEffect, useRef } from "react";
 
+const LINK_DIST = 120;
+
 export default function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let width = 0;
+    let height = 0;
+    let raf = 0;
+    let visible = true;
+    let particles: { x: number; y: number; r: number; vx: number; vy: number }[] =
+      [];
 
-    let width = (canvas.width = canvas.offsetWidth);
-    let height = (canvas.height = canvas.offsetHeight);
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = canvas.offsetWidth;
+      height = canvas.offsetHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.min(70, Math.floor((width * height) / 15000));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 1.4 + 0.5,
+        vx: (Math.random() - 0.5) * 0.18,
+        vy: (Math.random() - 0.5) * 0.18,
+      }));
+      draw();
+    };
 
-    const COUNT = Math.min(70, Math.floor((width * height) / 14000));
-    const particles = Array.from({ length: COUNT }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      r: Math.random() * 1.6 + 0.6,
-      vx: (Math.random() - 0.5) * 0.15,
-      vy: (Math.random() - 0.5) * 0.15,
-    }));
-
-    let raf: number;
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height);
+    function draw() {
+      ctx!.clearRect(0, 0, width, height);
+      const animate = !reduced.matches;
       for (const p of particles) {
-        if (!prefersReduced) {
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
+        if (animate) {
+          p.x = (p.x + p.vx + width) % width;
+          p.y = (p.y + p.vy + height) % height;
         }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(227, 255, 89, 0.45)";
-        ctx.fill();
+        ctx!.beginPath();
+        ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx!.fillStyle = "rgba(227,255,89,0.5)";
+        ctx!.fill();
       }
-      // connecting lines
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const a = particles[i];
           const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(227, 255, 89, ${0.12 * (1 - dist / 110)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
+          const d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d < LINK_DIST) {
+            ctx!.beginPath();
+            ctx!.moveTo(a.x, a.y);
+            ctx!.lineTo(b.x, b.y);
+            ctx!.strokeStyle = `rgba(227,255,89,${0.14 * (1 - d / LINK_DIST)})`;
+            ctx!.stroke();
           }
         }
       }
-      if (!prefersReduced) raf = requestAnimationFrame(draw);
-    };
-    draw();
+    }
 
-    const onResize = () => {
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
+    const loop = () => {
+      if (visible && !reduced.matches) draw();
+      raf = requestAnimationFrame(loop);
     };
-    window.addEventListener("resize", onResize);
+
+    resize();
+    raf = requestAnimationFrame(loop);
+    window.addEventListener("resize", resize);
+    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
+    io.observe(canvas);
+
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", resize);
+      io.disconnect();
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none absolute inset-0 h-full w-full opacity-70"
       aria-hidden="true"
+      className="pointer-events-none absolute inset-0 h-full w-full opacity-60 [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_80%)]"
     />
   );
 }

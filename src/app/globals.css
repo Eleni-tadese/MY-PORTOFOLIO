@@ -1,49 +1,77 @@
 @import "tailwindcss";
 
-:root {
-  --bg: #0f0f0f;
-  --bg-elev: #161616;
-  --card: #1a1a1a;
-  --border: #2a2a2a;
-  --lime: #e3ff59;
-  --lime-dim: #c9e64f;
-  --fg: #fafaf7;
-  --fg-dim: #a3a3a0;
-  --fg-faint: #6b6b68;
-}
+/* ------------------------------------------------------------------
+   Design tokens — the only place colors and fonts are defined.
+   Palette: lime #E3FF59 on near-black #0F0F0F, plus tints/shades.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-bg: #0f0f0f;
+  --color-surface: #161614;
+  --color-surface-2: #1d1d1a;
+  --color-border: #2b2b27;
+  --color-border-strong: #3d3d36;
 
-@theme inline {
-  --color-bg: var(--bg);
-  --color-bg-elev: var(--bg-elev);
-  --color-card: var(--card);
-  --color-border: var(--border);
-  --color-lime: var(--lime);
-  --color-lime-dim: var(--lime-dim);
-  --color-fg: var(--fg);
-  --color-fg-dim: var(--fg-dim);
-  --color-fg-faint: var(--fg-faint);
-  /* Swap these two lines for the next/font variables once you have real
-     internet access to fetch Google Fonts (see comment in layout.tsx). */
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-fg: #f4f5ec;
+  --color-muted: #adafa2;
+  --color-subtle: #868879;
+
+  --color-lime: #e3ff59;
+  --color-lime-soft: #f0ffa3;
+  --color-lime-deep: #b9d12c;
+  --color-on-lime: #0f0f0f;
+
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 2.5rem;
+  background: var(--color-bg);
+}
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--lime);
-  color: #0f0f0f;
+  background: var(--color-lime);
+  color: var(--color-on-lime);
 }
 
-/* Wavy underline nav hover */
+:focus-visible {
+  outline: 2px solid var(--color-lime);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---- Typography ---- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-subtle);
+}
+
+/* ---- Wavy underline (nav hover / active) ---- */
 .nav-link {
   position: relative;
   display: inline-block;
@@ -51,27 +79,44 @@ body {
 .nav-link::after {
   content: "";
   position: absolute;
-  left: 0;
-  bottom: -6px;
-  width: 100%;
+  left: 1rem;
+  bottom: 1px;
+  width: calc(100% - 2rem);
   height: 6px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='6' viewBox='0 0 20 6'%3E%3Cpath d='M0 3 Q 5 0 10 3 T 20 3' fill='none' stroke='%23E3FF59' stroke-width='1.5'/%3E%3C/svg%3E");
   background-repeat: repeat-x;
   background-size: 20px 6px;
   opacity: 0;
-  transform: translateY(2px);
+  transform: translateY(3px);
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
-.nav-link:hover::after,
-.nav-link[data-active="true"]::after {
+.nav-link:not([data-active="true"]):hover::after,
+.nav-link:not([data-active="true"]):focus-visible::after {
   opacity: 1;
   transform: translateY(0);
+  animation: wave 1.2s linear infinite;
+}
+@keyframes wave {
+  to {
+    background-position-x: 20px;
+  }
 }
 
-/* Gradient border glow on cards */
+/* ---- Cards: gradient border glow + cursor spotlight ---- */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 .glow-card {
   position: relative;
   isolation: isolate;
+  background-image: radial-gradient(
+    480px circle at var(--mx, 50%) var(--my, -300%),
+    rgb(227 255 89 / 0.08),
+    transparent 45%
+  );
+  transition: box-shadow 0.4s ease;
 }
 .glow-card::before {
   content: "";
@@ -80,28 +125,29 @@ body {
   border-radius: inherit;
   padding: 1px;
   background: conic-gradient(
-    from var(--angle, 0deg),
+    from var(--angle),
     transparent 0%,
-    var(--lime) 12%,
-    transparent 28%
+    var(--color-lime) 14%,
+    transparent 32%,
+    transparent 60%,
+    var(--color-lime-deep) 74%,
+    transparent 90%
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.4s ease;
-  z-index: -1;
-  animation: spin-angle 3.5s linear infinite;
-  animation-play-state: paused;
+  pointer-events: none;
+  animation: spin-angle 4s linear infinite;
 }
-.glow-card:hover::before {
+.glow-card:hover,
+.glow-card:focus-within {
+  box-shadow: 0 24px 60px -32px rgb(227 255 89 / 0.35);
+}
+.glow-card:hover::before,
+.glow-card:focus-within::before {
   opacity: 1;
-  animation-play-state: running;
-}
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
 }
 @keyframes spin-angle {
   to {
@@ -109,69 +155,203 @@ body {
   }
 }
 
-/* Rotating gradient avatar ring */
-.avatar-ring {
-  position: relative;
+/* ---- Scroll reveal (only hidden when JS can reveal it) ---- */
+@media (scripting: enabled) {
+  .reveal:not([data-in]) {
+    opacity: 0;
+    transform: translateY(14px);
+  }
 }
-.avatar-ring::before {
-  content: "";
-  position: absolute;
-  inset: -10px;
-  border-radius: 9999px;
-  background: conic-gradient(
-    from 0deg,
-    var(--lime),
-    transparent 30%,
-    transparent 70%,
-    var(--lime)
-  );
-  animation: spin 6s linear infinite;
-  z-index: -1;
+.reveal {
+  transition: opacity 0.8s var(--ease-out-expo) var(--reveal-delay, 0ms),
+    transform 0.8s var(--ease-out-expo) var(--reveal-delay, 0ms);
 }
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+
+/* ---- Entrance ---- */
+.rise {
+  animation: rise 0.9s var(--ease-out-expo) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
   }
 }
 
-/* Lime pill button */
-.btn-lime {
-  background: var(--lime);
-  color: #0f0f0f;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* ---- Role rotator ---- */
+.rotator {
+  display: inline-grid;
+  padding: 0 0.15em 0.15em 0;
+  vertical-align: bottom;
+  clip-path: inset(0 -0.3em 0 -0.3em);
 }
-.btn-lime:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -8px rgba(227, 255, 89, 0.5);
+.rotator > span {
+  grid-area: 1 / 1;
+  transition: transform 0.8s var(--ease-out-expo), opacity 0.5s ease;
+}
+.rotator > [data-state="before"] {
+  transform: translateY(-110%);
+  opacity: 0;
+}
+.rotator > [data-state="after"] {
+  transform: translateY(110%);
+  opacity: 0;
 }
 
-.btn-ghost {
-  border: 1px solid var(--border);
-  color: var(--fg);
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-.btn-ghost:hover {
-  border-color: var(--lime);
-  color: var(--lime);
-}
-
-/* Carousel */
-.embla {
-  overflow: hidden;
-}
-.embla__container {
+/* ---- Marquee ---- */
+.marquee {
   display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 45s) linear infinite;
 }
-.embla__slide {
-  flex: 0 0 auto;
-  min-width: 0;
+.marquee-wrap:hover .marquee {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---- Coverflow carousel ---- */
+.cf-stage {
+  display: grid;
+  justify-items: center;
+  perspective: 1800px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.cf-slide {
+  --spread: 88%;
+  grid-area: 1 / 1;
+  transform: translateX(calc(var(--d) * var(--spread)))
+    translateZ(calc(var(--ad) * -180px)) rotateY(calc(var(--dc) * -26deg))
+    scale(calc(1 - var(--ad) * 0.06));
+  transition: transform 0.55s var(--ease-out-expo), opacity 0.4s ease;
+  will-change: transform;
+}
+@media (min-width: 768px) {
+  .cf-slide {
+    --spread: 66%;
+  }
+}
+.cf-stage[data-dragging] .cf-slide {
+  transition: none;
+}
+.cf-shade {
+  opacity: calc(min(var(--ad), 1) * 0.65);
+  transition: opacity 0.4s ease;
+}
+.cf-stage[data-dragging] .cf-shade {
+  transition: none;
+}
+.cf-progress {
+  transform-origin: left;
+  animation: cf-progress var(--cf-duration) linear forwards;
+}
+@keyframes cf-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.fade-swap {
+  animation: fade-swap 0.6s var(--ease-out-expo) both;
+}
+@keyframes fade-swap {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* ---- Dialogs ---- */
+dialog::backdrop {
+  background: rgb(15 15 15 / 0.75);
+  backdrop-filter: blur(8px);
+}
+dialog[open] {
+  animation: dialog-in 0.45s var(--ease-out-expo);
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+/* ---- Archive rows: lime sweep on hover ---- */
+.sweep {
+  position: relative;
+  isolation: isolate;
+}
+.sweep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-lime);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+.sweep:hover::before,
+.sweep:focus-within::before {
+  transform: scaleY(1);
+}
+
+/* ---- Timeline ---- */
+.timeline-fill {
+  transform-origin: top;
+  transform: scaleY(var(--p, 0));
+}
+.timeline-dot {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+.timeline-dot[data-on] {
+  background: var(--color-lime);
+  border-color: var(--color-lime);
+  box-shadow: 0 0 0 6px rgb(227 255 89 / 0.15);
+}
+
+.pulse-dot {
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(227 255 89 / 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgb(227 255 89 / 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
+  }
+  .cf-progress {
+    animation: none !important;
+  }
+  /* Keep the skills ticker moving, just slower. */
+  .marquee {
+    animation-duration: 90s !important;
+    animation-iteration-count: infinite !important;
+  }
+  .reveal:not([data-in]) {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
