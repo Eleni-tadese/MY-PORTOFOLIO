@@ -30,7 +30,7 @@ export default function Contact({ socials }: { socials: Socials }) {
           <span aria-hidden className="h-px w-8 bg-lime" />
           Get In Touch
         </p>
-        <h2 id="contact-title" className="display mt-5 text-6xl sm:text-7xl md:text-8xl">
+        <h2 id="contact-title" className="display mt-5 text-5xl sm:text-6xl md:text-7xl">
           Let&apos;s <em className="text-lime">Connect</em>
         </h2>
         <p className="mx-auto mt-5 max-w-md text-muted sm:text-lg">

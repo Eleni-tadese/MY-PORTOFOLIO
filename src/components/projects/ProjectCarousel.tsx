@@ -180,7 +180,7 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
 
       {/* Controls */}
       <div className="mx-auto mt-8 flex max-w-4xl items-center justify-between gap-6">
-        <p className="display text-3xl tabular-nums" aria-hidden>
+        <p className="display text-2xl tabular-nums" aria-hidden>
           <span className="text-lime">{pad(active + 1)}</span>
           <span className="text-subtle"> / {pad(n)}</span>
         </p>
@@ -247,7 +247,7 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
       >
         <div className="md:col-span-7">
           <p className="eyebrow text-lime">{current.tag}</p>
-          <h3 className="display mt-3 text-5xl sm:text-6xl">{current.title}</h3>
+          <h3 className="display mt-3 text-4xl sm:text-5xl">{current.title}</h3>
           <p className="mt-1 text-subtle">{current.subtitle}</p>
           <Metrics items={current.metrics} className="mt-4" />
           <p className="mt-5 leading-relaxed text-muted">{current.summary}</p>

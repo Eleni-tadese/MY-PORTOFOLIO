@@ -45,7 +45,7 @@ export function SectionHeading({
           <span aria-hidden className="h-px w-8 bg-lime" />
           {eyebrow}
         </p>
-        <h2 id={id} className="display text-5xl sm:text-6xl md:text-7xl">
+        <h2 id={id} className="display text-4xl sm:text-5xl md:text-6xl">
           {title}
         </h2>
         {intro && (

@@ -18,9 +18,9 @@ export default function Footer({ name }: { name: string }) {
 
         <p
           aria-hidden
-          className="display mt-8 select-none whitespace-nowrap text-center text-[18.5vw] leading-[0.8] md:text-[13.5rem]"
+          className="display mt-8 select-none whitespace-nowrap pb-6 text-center text-[12.5vw] font-semibold leading-none md:pb-8 md:text-[8.5rem]"
         >
-          <span className="outline-text">Eleni </span>
+          <span className="text-subtle">Eleni </span>
           <span className="text-lime">Tadese</span>
         </p>
 

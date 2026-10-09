@@ -95,7 +95,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
           >
             <ArrowLeft size={16} aria-hidden /> Back to work
           </Link>
-          <Link href="/" className="display text-2xl">
+          <Link href="/" className="display text-xl font-semibold">
             {profile.name.split(" ")[0]}<span className="text-lime">.</span>
           </Link>
         </nav>
@@ -103,7 +103,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
         {/* Header */}
         <header className="pt-10 md:pt-16">
           <p className="eyebrow rise text-lime">{project.tag}</p>
-          <h1 className="display rise mt-5 text-[clamp(3.5rem,10vw,8rem)]">{project.title}</h1>
+          <h1 className="display rise mt-5 text-[clamp(2.5rem,7vw,5.5rem)] font-semibold">{project.title}</h1>
           <p className="rise mt-3 text-lg text-muted">{project.subtitle}</p>
           <div className="rise mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
             <Metrics items={project.metrics} className="text-base" />
@@ -165,7 +165,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
 
         {/* Next steps */}
         <div className="mt-16 flex flex-col items-start justify-between gap-6 rounded-3xl border border-border bg-surface p-8 sm:flex-row sm:items-center sm:p-10">
-          <p className="display text-3xl sm:text-4xl">
+          <p className="display text-2xl sm:text-3xl">
             Want to see more of my <em className="text-lime">work</em>?
           </p>
           <div className="flex flex-wrap gap-3">

@@ -99,7 +99,7 @@ export default function Navbar({ brand }: { brand: string }) {
         aria-label="Primary"
         className="flex w-full max-w-fit items-center justify-between gap-4 rounded-full border border-border-strong bg-surface/80 py-1.5 pl-5 pr-1.5 shadow-[0_12px_40px_-16px_rgb(0_0_0/0.8)] backdrop-blur-xl max-lg:min-w-[min(100%,22rem)]"
       >
-        <a href="#home" aria-label={`${brand} — home`} className="display pr-2 text-2xl">
+        <a href="#home" aria-label={`${brand} — home`} className="display pr-2 text-xl font-semibold">
           {brand}<span className="text-lime">.</span>
         </a>
 
@@ -151,7 +151,7 @@ export default function Navbar({ brand }: { brand: string }) {
           className="fixed inset-0 z-[70] flex flex-col bg-bg/95 px-6 pb-10 pt-6 backdrop-blur-xl lg:hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="display text-2xl">
+            <span className="display text-xl font-semibold">
               {brand}<span className="text-lime">.</span>
             </span>
             <button
@@ -183,7 +183,7 @@ export default function Navbar({ brand }: { brand: string }) {
                     <span className="text-xs tabular-nums text-subtle">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="display text-5xl">{item.label}</span>
+                    <span className="display text-4xl">{item.label}</span>
                   </a>
                 </li>
               );

@@ -63,7 +63,7 @@ export default function SkillExplorer({
                   : "border-border text-muted hover:border-border-strong hover:text-fg"
               }`}
             >
-              <span className="display text-2xl">{g.title}</span>
+              <span className="display text-lg sm:text-xl">{g.title}</span>
               <span className={`text-xs tabular-nums ${selected ? "" : "text-subtle"}`}>
                 {String(g.items.length).padStart(2, "0")}
               </span>

@@ -60,7 +60,7 @@ export default function CaseStudyDialog({
       </div>
 
       <div className="p-6 sm:p-10">
-        <h3 id="case-title" className="display text-5xl sm:text-6xl">
+        <h3 id="case-title" className="display text-4xl sm:text-5xl">
           {project.title}
         </h3>
         <p className="mt-2 text-muted">{project.subtitle}</p>

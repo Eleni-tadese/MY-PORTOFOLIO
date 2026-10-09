@@ -64,7 +64,7 @@ export default function Timeline({ items }: { items: Item[] }) {
               )}
             </p>
             <div>
-              <h3 className="display text-3xl sm:text-4xl">{item.role}</h3>
+              <h3 className="display text-2xl sm:text-3xl">{item.role}</h3>
               <p className="mt-1 text-lime">
                 {item.org}
                 <span className="text-subtle"> · {item.mode}</span>

@@ -22,7 +22,7 @@
   /* Admin-only feedback colour (never used on the public site). */
   --color-danger: #ff8f80;
 
-  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -58,19 +58,19 @@ body {
 /* ---- Typography ---- */
 .display {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+/* Accent words are lime only — no italics, so the page reads as one face. */
+.display em {
+  font-style: normal;
 }
 .eyebrow {
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-}
-.outline-text {
-  color: transparent;
-  -webkit-text-stroke: 1px var(--color-subtle);
 }
 
 /* ---- Wavy underline (nav hover / active) ---- */

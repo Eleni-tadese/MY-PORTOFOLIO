@@ -45,7 +45,7 @@ export default function About({
               <Sparkles size={14} className="text-lime" aria-hidden />
               Profile
             </p>
-            <p className="display relative text-4xl leading-[1.1] sm:text-5xl">
+            <p className="display relative text-2xl leading-snug sm:text-3xl">
               Software Engineer working across{" "}
               {focus.map((f, i) => (
                 <Fragment key={f}>
@@ -74,7 +74,7 @@ export default function About({
                     <span className="text-xs tabular-nums text-lime group-hover:text-on-lime">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="display flex-1 text-3xl group-hover:text-on-lime">
+                    <span className="display flex-1 text-xl sm:text-2xl group-hover:text-on-lime">
                       {s}
                     </span>
                     <ArrowUpRight
