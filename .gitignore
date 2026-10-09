@@ -12,3 +12,6 @@ npm-debug.log*
 .env*.local
 *.tsbuildinfo
 .env
+
+# local notes for Claude Code (kept off GitHub)
+CLAUDE.md
