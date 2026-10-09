@@ -9,6 +9,7 @@ const links = nav.slice(1);
 export default function Navbar() {
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const listRef = useRef<HTMLUListElement>(null);
   const pillRef = useRef<HTMLSpanElement>(null);
   const firstMobileLink = useRef<HTMLAnchorElement>(null);
@@ -25,6 +26,33 @@ export default function Navbar() {
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
+  }, []);
+
+  // Hide while scrolling down, show again on scroll up. Jumps triggered by an
+  // in-page link (#work, View My Work…) keep the bar visible.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let jumpUntil = 0;
+    const onClick = (e: MouseEvent) => {
+      if ((e.target as Element | null)?.closest?.('a[href^="#"]')) {
+        jumpUntil = performance.now() + 1200;
+        setHidden(false);
+      }
+    };
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      if (y < 120 || performance.now() < jumpUntil) return setHidden(false);
+      if (delta > 6) setHidden(true);
+      else if (delta < -6) setHidden(false);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("click", onClick);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("click", onClick);
+    };
   }, []);
 
   // Slide the lime pill behind the active link.
@@ -61,7 +89,12 @@ export default function Navbar() {
   }, [open]);
 
   return (
-    <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
+    <header
+      onFocus={() => setHidden(false)}
+      className={`fixed inset-x-0 top-4 z-50 flex justify-center px-4 transition-[translate] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        hidden && !open ? "-translate-y-[160%]" : ""
+      }`}
+    >
       <nav
         aria-label="Primary"
         className="flex w-full max-w-fit items-center justify-between gap-4 rounded-full border border-border-strong bg-surface/80 py-1.5 pl-5 pr-1.5 shadow-[0_12px_40px_-16px_rgb(0_0_0/0.8)] backdrop-blur-xl max-lg:min-w-[min(100%,22rem)]"
