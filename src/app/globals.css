@@ -270,6 +270,16 @@ body {
     transform: translateY(10px);
   }
 }
+/* Skill cards entering from the right as their category slides in. */
+.slide-in {
+  animation: slide-in 0.7s var(--ease-out-expo) both;
+}
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+}
 
 /* ---- Dialogs ---- */
 dialog::backdrop {

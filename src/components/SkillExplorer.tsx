@@ -1,10 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { Project, SkillGroup } from "@/content/types";
 import { projectsUsing } from "@/content/utils";
 
-/** Tabbed skill categories; each skill shows which projects use it. */
+/**
+ * Tabbed skill categories; each skill shows which projects use it.
+ * The panels form a horizontal track that slides between categories
+ * (right → left going forward) and can be swiped on touch screens.
+ */
 export default function SkillExplorer({
   skillGroups,
   projects,
@@ -14,7 +18,38 @@ export default function SkillExplorer({
 }) {
   const [active, setActive] = useState(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const group = skillGroups[active];
+  const slides = useRef<(HTMLUListElement | null)[]>([]);
+  const [height, setHeight] = useState<number>();
+  const swipeX = useRef<number | null>(null);
+
+  const select = (i: number) => {
+    setActive(i);
+    tabs.current[i]?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+  };
+
+  // The viewport takes the active slide's height so shorter groups don't leave a gap.
+  useLayoutEffect(() => {
+    const el = slides.current[active];
+    if (!el) return;
+    const update = () => setHeight(el.offsetHeight);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [active]);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") swipeX.current = e.clientX;
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (swipeX.current === null) return;
+    const dx = e.clientX - swipeX.current;
+    swipeX.current = null;
+    if (Math.abs(dx) < 50) return;
+    const last = skillGroups.length - 1;
+    if (dx < 0 && active < last) select(active + 1);
+    if (dx > 0 && active > 0) select(active - 1);
+  };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     const last = skillGroups.length - 1;
@@ -30,7 +65,7 @@ export default function SkillExplorer({
               : null;
     if (next === null) return;
     e.preventDefault();
-    setActive(next);
+    select(next);
     tabs.current[next]?.focus();
   };
 
@@ -56,7 +91,7 @@ export default function SkillExplorer({
               aria-selected={selected}
               aria-controls="skill-panel"
               tabIndex={selected ? 0 : -1}
-              onClick={() => setActive(i)}
+              onClick={() => select(i)}
               className={`group flex shrink-0 items-center justify-between gap-6 rounded-2xl border px-5 py-4 text-left transition-colors ${
                 selected
                   ? "border-lime bg-lime text-on-lime"
@@ -76,27 +111,50 @@ export default function SkillExplorer({
         id="skill-panel"
         role="tabpanel"
         aria-labelledby={`skill-tab-${active}`}
-        className="lg:col-span-8"
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerCancel={() => (swipeX.current = null)}
+        className="overflow-hidden transition-[height] duration-500 ease-out-expo lg:col-span-8 [touch-action:pan-y]"
+        style={{ height }}
       >
-        <ul key={group.title} className="grid gap-3 sm:grid-cols-2">
-          {group.items.map((skill, i) => {
-            const used = projectsUsing(projects, skill);
+        <div
+          className="flex items-start transition-transform duration-700 ease-out-expo"
+          style={{ transform: `translateX(-${active * 100}%)` }}
+        >
+          {skillGroups.map((g, gi) => {
+            const current = gi === active;
             return (
-              <li
-                key={skill}
-                className="fade-swap glow-card rounded-2xl border border-border bg-surface p-5"
-                style={{ animationDelay: `${i * 50}ms` }}
+              <ul
+                // Re-keyed when it becomes active so the cards replay their entrance.
+                key={`${g.title}-${current}`}
+                ref={(el) => {
+                  slides.current[gi] = el;
+                }}
+                aria-hidden={!current}
+                inert={!current}
+                className="grid w-full shrink-0 gap-3 sm:grid-cols-2"
               >
-                <p className="text-base font-medium">{skill}</p>
-                {used.length > 0 && (
-                  <p className="mt-1 text-xs text-subtle">
-                    Used in <span className="text-muted">{used.join(", ")}</span>
-                  </p>
-                )}
-              </li>
+                {g.items.map((skill, i) => {
+                  const used = projectsUsing(projects, skill);
+                  return (
+                    <li
+                      key={skill}
+                      className={`glow-card rounded-2xl border border-border bg-surface p-5 ${current ? "slide-in" : ""}`}
+                      style={{ animationDelay: `${120 + i * 60}ms` }}
+                    >
+                      <p className="text-base font-medium">{skill}</p>
+                      {used.length > 0 && (
+                        <p className="mt-1 text-xs text-subtle">
+                          Used in <span className="text-muted">{used.join(", ")}</span>
+                        </p>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
             );
           })}
-        </ul>
+        </div>
       </div>
     </div>
   );
