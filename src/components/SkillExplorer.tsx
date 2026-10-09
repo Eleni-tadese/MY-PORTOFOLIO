@@ -4,14 +4,15 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Project, SkillGroup } from "@/content/types";
 import { projectsUsing } from "@/content/utils";
 
-const AUTOPLAY_MS = 3500;
+const AUTOPLAY_MS = 2000;
 
 /**
  * Tabbed skill categories; each skill shows which projects use it.
  * The panels form a horizontal track that slides between categories
  * (right → left going forward) and can be swiped on touch screens.
- * Categories advance on their own; autoplay pauses on hover, keyboard
- * focus and while the section is off-screen.
+ * Categories advance on their own every 2 s; autoplay pauses on hover and
+ * while off-screen, and stops for good once the visitor picks a category
+ * (click, tap, swipe or keyboard).
  */
 export default function SkillExplorer({
   skillGroups,
@@ -29,8 +30,14 @@ export default function SkillExplorer({
   const tablist = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const running = inView && !hovered && !focused && skillGroups.length > 1;
+  const [stopped, setStopped] = useState(false);
+  const running = inView && !hovered && !stopped && skillGroups.length > 1;
+
+  /** A deliberate choice by the visitor ends autoplay. */
+  const choose = (i: number) => {
+    setStopped(true);
+    select(i);
+  };
 
   const select = (i: number) => {
     setActive(i);
@@ -77,8 +84,8 @@ export default function SkillExplorer({
     swipeX.current = null;
     if (Math.abs(dx) < 50) return;
     const last = skillGroups.length - 1;
-    if (dx < 0 && active < last) select(active + 1);
-    if (dx > 0 && active > 0) select(active - 1);
+    if (dx < 0 && active < last) choose(active + 1);
+    if (dx > 0 && active > 0) choose(active - 1);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -95,7 +102,7 @@ export default function SkillExplorer({
               : null;
     if (next === null) return;
     e.preventDefault();
-    select(next);
+    choose(next);
     tabs.current[next]?.focus();
   };
 
@@ -104,10 +111,6 @@ export default function SkillExplorer({
       ref={root}
       onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
       onPointerLeave={() => setHovered(false)}
-      onFocus={(e) => setFocused(e.target.matches(":focus-visible"))}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
-      }}
       className="grid gap-8 lg:grid-cols-12"
     >
       <div
@@ -131,7 +134,7 @@ export default function SkillExplorer({
               aria-selected={selected}
               aria-controls="skill-panel"
               tabIndex={selected ? 0 : -1}
-              onClick={() => select(i)}
+              onClick={() => choose(i)}
               className={`group relative flex shrink-0 items-center justify-between gap-6 overflow-hidden rounded-2xl border px-5 py-4 text-left transition-colors ${
                 selected
                   ? "border-lime bg-lime text-on-lime"
@@ -142,8 +145,8 @@ export default function SkillExplorer({
               <span className={`text-xs tabular-nums ${selected ? "" : "text-subtle"}`}>
                 {String(g.items.length).padStart(2, "0")}
               </span>
-              {selected && (
-                // Time until the next category; restarts when autoplay resumes.
+              {selected && !stopped && (
+                // Time until the next category; hidden once autoplay has stopped.
                 <span
                   key={`${active}-${running}`}
                   aria-hidden

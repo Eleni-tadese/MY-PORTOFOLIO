@@ -36,7 +36,7 @@ export default function About({
       <div className="mt-10 grid gap-4 lg:grid-cols-12">
         {/* Statement */}
         <Reveal className="lg:col-span-7">
-          <GlowCard className="relative flex h-full flex-col justify-between gap-12 overflow-hidden sm:p-10">
+          <GlowCard className="relative flex h-full flex-col justify-center gap-5 overflow-hidden sm:p-10">
             <div
               aria-hidden
               className="pointer-events-none absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-lime/10 blur-[100px]"
@@ -57,7 +57,7 @@ export default function About({
           </GlowCard>
         </Reveal>
 
-        {/* Services — rows fill with lime on hover */}
+        {/* Services */}
         <Reveal delay={100} className="lg:col-span-5">
           <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-surface">
             <p className="eyebrow flex items-center gap-2 p-6 pb-2 text-[10px] text-subtle sm:px-8 sm:pt-8">
@@ -66,23 +66,14 @@ export default function About({
             </p>
             <ul className="flex flex-1 flex-col justify-center">
               {profile.services.map((s, i) => (
-                <li key={s} className="border-b border-border last:border-0">
-                  <a
-                    href="#contact"
-                    className="sweep group flex items-center gap-4 px-6 py-4 sm:px-8"
-                  >
-                    <span className="text-xs tabular-nums text-lime group-hover:text-on-lime">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="display flex-1 text-lg sm:text-xl group-hover:text-on-lime">
-                      {s}
-                    </span>
-                    <ArrowUpRight
-                      size={20}
-                      aria-hidden
-                      className="text-subtle transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-on-lime"
-                    />
-                  </a>
+                <li
+                  key={s}
+                  className="flex items-center gap-4 border-b border-border px-6 py-4 last:border-0 sm:px-8"
+                >
+                  <span className="text-xs tabular-nums text-lime">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="display text-lg sm:text-xl">{s}</span>
                 </li>
               ))}
             </ul>

@@ -296,26 +296,6 @@ dialog[open] {
   }
 }
 
-/* ---- Archive rows: lime sweep on hover ---- */
-.sweep {
-  position: relative;
-  isolation: isolate;
-}
-.sweep::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--color-lime);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.5s var(--ease-out-expo);
-}
-.sweep:hover::before,
-.sweep:focus-within::before {
-  transform: scaleY(1);
-}
-
 /* ---- Timeline ---- */
 .timeline-fill {
   transform-origin: top;
