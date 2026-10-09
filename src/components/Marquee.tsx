@@ -1,4 +1,5 @@
 import type { SkillGroup } from "@/content/types";
+import TechIcon, { hasTechIcon } from "./ui/TechIcon";
 
 function Row({
   items,
@@ -12,13 +13,15 @@ function Row({
   const copy = (
     <ul className="flex shrink-0 items-center">
       {items.map((s) => (
-        <li key={s} className="flex items-center">
-          <span
-            className={`display px-5 text-2xl sm:text-4xl ${muted ? "text-subtle" : "text-fg"}`}
-          >
+        <li key={s} className="flex items-center gap-3 px-5 sm:gap-4 sm:px-7">
+          {hasTechIcon(s) ? (
+            <TechIcon name={s} className="h-6 w-6 shrink-0 text-lime sm:h-8 sm:w-8" />
+          ) : (
+            <span className="text-lg text-lime sm:text-2xl">✦</span>
+          )}
+          <span className={`display text-2xl sm:text-4xl ${muted ? "text-subtle" : "text-fg"}`}>
             {s}
           </span>
-          <span className="text-lg text-lime sm:text-2xl">✦</span>
         </li>
       ))}
     </ul>
