@@ -48,7 +48,7 @@ function Block({
         <span aria-hidden className="h-px w-6 bg-lime" />
         {title}
       </h2>
-      <div className="text-lg leading-relaxed text-muted md:col-span-8">{children}</div>
+      <div className="text-base leading-relaxed text-muted md:col-span-8">{children}</div>
     </Reveal>
   );
 }
@@ -103,13 +103,13 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
         {/* Header */}
         <header className="pt-10 md:pt-16">
           <p className="eyebrow rise text-lime">{project.tag}</p>
-          <h1 className="display rise mt-5 text-[clamp(2.5rem,7vw,5.5rem)] font-semibold">{project.title}</h1>
-          <p className="rise mt-3 text-lg text-muted">{project.subtitle}</p>
+          <h1 className="display rise mt-5 text-[clamp(2.25rem,6vw,4.5rem)] font-semibold">{project.title}</h1>
+          <p className="rise mt-3 text-base text-muted">{project.subtitle}</p>
           <div className="rise mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
             <Metrics items={project.metrics} className="text-base" />
             <ProjectLinks live={project.live} code={project.code} label={project.title} />
           </div>
-          <p className="rise mt-8 max-w-3xl text-xl leading-relaxed text-fg sm:text-2xl">
+          <p className="rise mt-8 max-w-3xl text-lg leading-relaxed text-fg sm:text-xl">
             {project.summary}
           </p>
         </header>
@@ -165,7 +165,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
 
         {/* Next steps */}
         <div className="mt-16 flex flex-col items-start justify-between gap-6 rounded-3xl border border-border bg-surface p-8 sm:flex-row sm:items-center sm:p-10">
-          <p className="display text-2xl sm:text-3xl">
+          <p className="display text-xl sm:text-2xl">
             Want to see more of my <em className="text-lime">work</em>?
           </p>
           <div className="flex flex-wrap gap-3">

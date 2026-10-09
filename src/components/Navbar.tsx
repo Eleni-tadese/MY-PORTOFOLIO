@@ -183,7 +183,7 @@ export default function Navbar({ brand }: { brand: string }) {
                     <span className="text-xs tabular-nums text-subtle">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="display text-4xl">{item.label}</span>
+                    <span className="display text-3xl">{item.label}</span>
                   </a>
                 </li>
               );

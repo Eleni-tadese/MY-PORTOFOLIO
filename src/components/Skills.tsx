@@ -39,7 +39,7 @@ export default function Skills({
           <div className="flex gap-4">
             <Trophy className="mt-1 shrink-0 text-lime" size={22} aria-hidden />
             <div>
-              <h3 className="text-lg font-medium">Problem Solving</h3>
+              <h3 className="text-base font-medium">Problem Solving</h3>
               <p className="mt-1 max-w-xl text-sm text-muted">{a2sv}</p>
             </div>
           </div>

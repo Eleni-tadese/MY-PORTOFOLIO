@@ -63,7 +63,7 @@ export default function SkillExplorer({
                   : "border-border text-muted hover:border-border-strong hover:text-fg"
               }`}
             >
-              <span className="display text-lg sm:text-xl">{g.title}</span>
+              <span className="display text-base sm:text-lg">{g.title}</span>
               <span className={`text-xs tabular-nums ${selected ? "" : "text-subtle"}`}>
                 {String(g.items.length).padStart(2, "0")}
               </span>
@@ -87,7 +87,7 @@ export default function SkillExplorer({
                 className="fade-swap glow-card rounded-2xl border border-border bg-surface p-5"
                 style={{ animationDelay: `${i * 50}ms` }}
               >
-                <p className="text-lg font-medium">{skill}</p>
+                <p className="text-base font-medium">{skill}</p>
                 {used.length > 0 && (
                   <p className="mt-1 text-xs text-subtle">
                     Used in <span className="text-muted">{used.join(", ")}</span>

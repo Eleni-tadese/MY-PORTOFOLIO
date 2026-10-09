@@ -29,19 +29,19 @@ export default function Hero({ profile }: { profile: Profile }) {
           </p>
           <h1
             id="hero-title"
-            className="display rise mt-5 text-[clamp(2.75rem,9vw,6rem)] font-semibold"
+            className="display rise mt-5 text-[clamp(2.25rem,7vw,4.5rem)] font-semibold"
             style={delay(80)}
           >
             {profile.name}
           </h1>
           <p
-            className="display rise mt-3 text-2xl text-lime sm:text-4xl"
+            className="display rise mt-2 text-xl text-lime sm:text-2xl"
             style={delay(160)}
           >
             <RoleRotator roles={profile.roles} />
           </p>
           <p
-            className="rise mt-8 max-w-lg text-base leading-relaxed text-muted sm:text-lg"
+            className="rise mt-8 max-w-lg text-base leading-relaxed text-muted"
             style={delay(240)}
           >
             {profile.intro}

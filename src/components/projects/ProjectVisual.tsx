@@ -42,7 +42,7 @@ export default function ProjectVisual({
             className="flex h-full flex-col justify-between p-6 sm:p-10 [background-image:linear-gradient(var(--color-border)_1px,transparent_1px),linear-gradient(90deg,var(--color-border)_1px,transparent_1px)] [background-size:36px_36px]"
           >
             <span className="eyebrow text-[10px] text-subtle">{project.subtitle}</span>
-            <span className="display text-4xl text-lime sm:text-6xl">{project.title}</span>
+            <span className="display text-3xl text-lime sm:text-5xl">{project.title}</span>
             <span className="flex flex-wrap gap-2">
               {project.stack.slice(0, 4).map((s) => (
                 <span key={s} className="rounded-full border border-border-strong bg-bg/60 px-3 py-1 text-xs text-muted">

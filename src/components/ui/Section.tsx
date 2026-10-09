@@ -45,11 +45,11 @@ export function SectionHeading({
           <span aria-hidden className="h-px w-8 bg-lime" />
           {eyebrow}
         </p>
-        <h2 id={id} className="display text-4xl sm:text-5xl md:text-6xl">
+        <h2 id={id} className="display text-3xl sm:text-4xl md:text-5xl">
           {title}
         </h2>
         {intro && (
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">
             {intro}
           </p>
         )}

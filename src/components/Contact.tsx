@@ -30,17 +30,17 @@ export default function Contact({ socials }: { socials: Socials }) {
           <span aria-hidden className="h-px w-8 bg-lime" />
           Get In Touch
         </p>
-        <h2 id="contact-title" className="display mt-5 text-5xl sm:text-6xl md:text-7xl">
+        <h2 id="contact-title" className="display mt-5 text-4xl sm:text-5xl">
           Let&apos;s <em className="text-lime">Connect</em>
         </h2>
-        <p className="mx-auto mt-5 max-w-md text-muted sm:text-lg">
+        <p className="mx-auto mt-5 max-w-md text-muted">
           I&apos;m always interested in new opportunities and collaborations.
         </p>
 
         <div className="mt-10 flex items-center justify-center gap-3 sm:gap-4">
           <a
             href={`mailto:${socials.email}`}
-            className="group inline-flex min-w-0 items-center gap-2 text-[clamp(1.05rem,4.6vw,2.5rem)] font-light tracking-tight transition-colors hover:text-lime"
+            className="group inline-flex min-w-0 items-center gap-2 text-[clamp(1rem,4.2vw,1.75rem)] font-light tracking-tight transition-colors hover:text-lime"
           >
             <span className="truncate">{socials.email}</span>
             <ArrowUpRight

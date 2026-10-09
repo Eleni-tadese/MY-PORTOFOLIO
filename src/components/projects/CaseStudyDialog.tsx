@@ -60,7 +60,7 @@ export default function CaseStudyDialog({
       </div>
 
       <div className="p-6 sm:p-10">
-        <h3 id="case-title" className="display text-4xl sm:text-5xl">
+        <h3 id="case-title" className="display text-3xl sm:text-4xl">
           {project.title}
         </h3>
         <p className="mt-2 text-muted">{project.subtitle}</p>
@@ -132,7 +132,7 @@ export default function CaseStudyDialog({
 
         <div className="mt-10 grid gap-10 md:grid-cols-12">
           <div className="md:col-span-8">
-            <p className="text-lg leading-relaxed">{project.summary}</p>
+            <p className="text-base leading-relaxed">{project.summary}</p>
             {project.role && (
               <>
                 <h4 className="eyebrow mt-10 text-subtle">My role</h4>
