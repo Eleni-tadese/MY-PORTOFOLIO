@@ -7,7 +7,6 @@ import Projects from "@/components/Projects";
 import Experience from "@/components/Experience";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
 import Effects from "@/components/Effects";
 import { getSiteContent } from "@/lib/content";
 
@@ -41,7 +40,6 @@ export default async function Home() {
         />
         <Contact socials={c.socials} />
       </main>
-      <Footer name={c.profile.name} />
     </>
   );
 }

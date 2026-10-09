@@ -1,13 +1,17 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Project, SkillGroup } from "@/content/types";
 import { projectsUsing } from "@/content/utils";
+
+const AUTOPLAY_MS = 3500;
 
 /**
  * Tabbed skill categories; each skill shows which projects use it.
  * The panels form a horizontal track that slides between categories
  * (right → left going forward) and can be swiped on touch screens.
+ * Categories advance on their own; autoplay pauses on hover, keyboard
+ * focus and while the section is off-screen.
  */
 export default function SkillExplorer({
   skillGroups,
@@ -21,11 +25,37 @@ export default function SkillExplorer({
   const slides = useRef<(HTMLUListElement | null)[]>([]);
   const [height, setHeight] = useState<number>();
   const swipeX = useRef<number | null>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const tablist = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const running = inView && !hovered && !focused && skillGroups.length > 1;
 
   const select = (i: number) => {
     setActive(i);
-    tabs.current[i]?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+    // Keep the active tab visible in the horizontal (mobile) tab row without
+    // scrolling the page itself.
+    const list = tablist.current;
+    const tab = tabs.current[i];
+    if (list && tab && list.scrollWidth > list.clientWidth) {
+      list.scrollTo({ left: tab.offsetLeft - 8, behavior: "smooth" });
+    }
   };
+
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!running) return;
+    const id = setTimeout(() => select((active + 1) % skillGroups.length), AUTOPLAY_MS);
+    return () => clearTimeout(id);
+  }, [active, running, skillGroups.length]);
 
   // The viewport takes the active slide's height so shorter groups don't leave a gap.
   useLayoutEffect(() => {
@@ -70,13 +100,23 @@ export default function SkillExplorer({
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-12">
+    <div
+      ref={root}
+      onPointerEnter={(e) => e.pointerType === "mouse" && setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
+      onFocus={(e) => setFocused(e.target.matches(":focus-visible"))}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false);
+      }}
+      className="grid gap-8 lg:grid-cols-12"
+    >
       <div
+        ref={tablist}
         role="tablist"
         aria-label="Skill categories"
         aria-orientation="vertical"
         onKeyDown={onKeyDown}
-        className="flex gap-2 overflow-x-auto pb-2 lg:col-span-4 lg:flex-col lg:overflow-visible lg:pb-0"
+        className="relative flex gap-2 overflow-x-auto pb-2 lg:col-span-4 lg:flex-col lg:overflow-visible lg:pb-0"
       >
         {skillGroups.map((g, i) => {
           const selected = i === active;
@@ -92,7 +132,7 @@ export default function SkillExplorer({
               aria-controls="skill-panel"
               tabIndex={selected ? 0 : -1}
               onClick={() => select(i)}
-              className={`group flex shrink-0 items-center justify-between gap-6 rounded-2xl border px-5 py-4 text-left transition-colors ${
+              className={`group relative flex shrink-0 items-center justify-between gap-6 overflow-hidden rounded-2xl border px-5 py-4 text-left transition-colors ${
                 selected
                   ? "border-lime bg-lime text-on-lime"
                   : "border-border text-muted hover:border-border-strong hover:text-fg"
@@ -102,6 +142,15 @@ export default function SkillExplorer({
               <span className={`text-xs tabular-nums ${selected ? "" : "text-subtle"}`}>
                 {String(g.items.length).padStart(2, "0")}
               </span>
+              {selected && (
+                // Time until the next category; restarts when autoplay resumes.
+                <span
+                  key={`${active}-${running}`}
+                  aria-hidden
+                  className={`absolute inset-x-0 bottom-0 h-0.5 bg-on-lime/40 ${running ? "cf-progress" : "scale-x-0"}`}
+                  style={{ "--cf-duration": `${AUTOPLAY_MS}ms` } as React.CSSProperties}
+                />
+              )}
             </button>
           );
         })}
