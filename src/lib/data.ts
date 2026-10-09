@@ -8,9 +8,15 @@ export type Project = {
   summary: string;
   highlights: string[];
   stack: string[];
+  /** What I personally did on the project. */
+  role?: string;
   live: string | null;
   code: string | null;
   images: Shot[];
+  /** Read-only demo login shown in the case study. */
+  demo?: { email: string; password: string; note?: string };
+  /** Short screen recording (MP4/WebM in /public/projects), played in the case study. */
+  video?: { src: string; poster?: string };
 };
 
 export const profile = {
@@ -89,19 +95,21 @@ export const projects: Project[] = [
     subtitle: "Gibi Gubae Management System",
     tag: "2nd Place — AGT-HUB Hackathon",
     summary:
-      "A fellowship management platform built in a 2-week hackathon — live in English, Amharic and Afaan Oromoo.",
+      "A platform that replaces paper lists and spreadsheets for a student fellowship: registration, courses, attendance, mentorship families, private counseling and donations, in English, Amharic and Afaan Oromoo.",
+    role: "Full-stack developer. Built the Django REST API, the React and TypeScript interface, the database design, Docker setup, tests and CI.",
     highlights: [
-      "Students, attendance, mentorship families, counseling Q&A and donations in one place.",
-      "Role-based access for 8 roles, with JWT authentication and rate limiting.",
-      "Chapa payments, notifications, and automated tests with CI.",
+      "Role-based access for 8 roles, enforced on the server, with JWT authentication and rate limiting.",
+      "Bulk registration from Excel with printable login slips, plus undo for imports, family distribution and yearly rollover.",
+      "Private questions routed to the right counselor, and a Chapa donation integration.",
+      "458 automated tests, Docker and CI.",
     ],
     stack: ["React", "TypeScript", "Tailwind CSS", "Django REST Framework", "PostgreSQL", "Docker", "Chapa API"],
     live: "https://finot.pages.dev",
     code: "https://github.com/AGT-HUB-ASTU-Gibi-Gubaie/hackathon-2026-HIRUY",
     images: [
-      { src: "/projects/finot-landing.jpg", alt: "Finot landing page" },
-      { src: "/projects/finot-admin.jpg", alt: "Finot admin overview" },
-      { src: "/projects/finot-dashboard.jpg", alt: "Finot student dashboard" },
+      { src: "/projects/finot-home.webp", alt: "Finot home page in English" },
+      { src: "/projects/finot-admin.webp", alt: "Finot admin overview with users, families, events and donations" },
+      { src: "/projects/finot-home-amharic.webp", alt: "Finot home page in Amharic" },
     ],
   },
   {
@@ -109,44 +117,44 @@ export const projects: Project[] = [
     title: "SraHub",
     subtitle: "A2SV Internship · Team Project",
     tag: "Live job board",
-    summary: "A live job board connecting talent with employers across Ethiopia.",
+    summary:
+      "A live job board connecting talent with employers across Ethiopia, built during the A2SV internship.",
+    role: "Full-stack developer on the team: Next.js and Redux on the frontend, plus backend work in Go.",
     highlights: [
-      "Built multiple pages in a 5-engineer Next.js frontend team.",
-      "Shipped inside a 17-contributor org with conventional commits and CI.",
+      "Worked in a 17-contributor organization using feature branches, pull requests, conventional commits and CI.",
     ],
     stack: ["Next.js", "Redux", "Go"],
     live: "https://srahub-web.firaolkef.workers.dev/",
     code: "https://github.com/A2SV-ASTU/srahub",
-    images: [{ src: "/projects/srahub-landing.jpg", alt: "SraHub landing page" }],
+    images: [{ src: "/projects/srahub-home.webp", alt: "SraHub home page" }],
   },
   {
     slug: "evangadi-forum",
     title: "Evangadi Forum",
     subtitle: "Q&A community platform",
-    tag: "Full-stack · Community",
-    summary: "A community Q&A forum to ask, answer and learn together.",
+    tag: "Full-stack · Team project",
+    summary:
+      "A community Q&A forum where users post questions, answer others and manage their own content.",
     highlights: [
-      "Secure authentication with full CRUD for questions and answers.",
-      "Responsive React + Tailwind interface backed by MySQL.",
+      "Secure authentication with full create, edit and delete for questions and answers.",
+      "React and Tailwind interface with a Node.js, Express and MySQL backend.",
+      "Built with a team during the Evangadi Full Stack program.",
     ],
-    stack: ["React", "Tailwind CSS", "MySQL"],
+    stack: ["React", "Tailwind CSS", "Node.js", "Express", "MySQL"],
     live: "https://evangadi-forum-bci5-pi.vercel.app/login",
     code: "https://github.com/Eleni-tadese/evangadi-forum",
-    images: [
-      { src: "/projects/forum-login.png", alt: "Evangadi Forum login page" },
-      { src: "/projects/forum-how-it-works.png", alt: "Evangadi Forum how-it-works page" },
-    ],
+    images: [],
   },
   {
     slug: "job-match-tracker",
     title: "Job Match Tracker",
     subtitle: "AI resume matching",
-    tag: "Full-stack · AI",
-    summary: "A job tracker with an AI resume matcher that scores your fit for each role.",
+    tag: "Full-stack · NLP",
+    summary: "Tracks your job applications and scores how well your resume fits each role.",
     highlights: [
-      "Resume matching with TF-IDF / cosine similarity.",
-      "Live job discovery via the Remotive API.",
-      "Application tracking with notes, tested with pytest.",
+      "Resume matching with TF-IDF and cosine similarity.",
+      "Live job discovery through the Remotive API.",
+      "Application tracking with notes and status, tested with pytest.",
     ],
     stack: ["FastAPI", "SQLAlchemy", "SQLite", "Next.js", "TypeScript", "Tailwind CSS"],
     live: null,

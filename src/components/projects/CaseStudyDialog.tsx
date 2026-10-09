@@ -63,6 +63,22 @@ export default function CaseStudyDialog({
         </h3>
         <p className="mt-2 text-muted">{project.subtitle}</p>
 
+        {project.video && (
+          <div className="mt-8">
+            <h4 className="eyebrow text-subtle">Watch the demo</h4>
+            <video
+              controls
+              muted
+              playsInline
+              preload="metadata"
+              poster={project.video.poster}
+              className="mt-4 w-full rounded-2xl border border-border-strong bg-bg"
+            >
+              <source src={project.video.src} />
+            </video>
+          </div>
+        )}
+
         {count > 0 && (
         <div className="relative mt-8">
           <div className="aspect-[16/10]">
@@ -106,6 +122,12 @@ export default function CaseStudyDialog({
         <div className="mt-10 grid gap-10 md:grid-cols-12">
           <div className="md:col-span-8">
             <p className="text-lg leading-relaxed">{project.summary}</p>
+            {project.role && (
+              <>
+                <h4 className="eyebrow mt-10 text-subtle">My role</h4>
+                <p className="mt-4 leading-relaxed text-fg">{project.role}</p>
+              </>
+            )}
             <h4 className="eyebrow mt-10 text-subtle">Highlights</h4>
             <ul className="mt-4 space-y-4">
               {project.highlights.map((h) => (
@@ -128,6 +150,24 @@ export default function CaseStudyDialog({
             <div className="mt-8">
               <ProjectLinks live={project.live} code={project.code} label={project.title} />
             </div>
+            {project.demo && (
+              <div className="mt-8 rounded-2xl border border-lime/30 bg-bg p-5">
+                <h4 className="eyebrow text-[10px] text-lime">Demo account</h4>
+                <dl className="mt-3 space-y-2 text-sm">
+                  <div>
+                    <dt className="text-subtle">Email</dt>
+                    <dd className="select-all break-all text-fg">{project.demo.email}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-subtle">Password</dt>
+                    <dd className="select-all text-fg">{project.demo.password}</dd>
+                  </div>
+                </dl>
+                {project.demo.note && (
+                  <p className="mt-3 text-xs text-subtle">{project.demo.note}</p>
+                )}
+              </div>
+            )}
           </aside>
         </div>
       </div>
