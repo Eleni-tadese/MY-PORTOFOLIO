@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Project } from "@/lib/data";
 import Chip from "../ui/Chip";
+import Metrics from "../ui/Metrics";
 import ProjectLinks from "../ui/ProjectLinks";
 import ProjectVisual from "./ProjectVisual";
 
@@ -62,6 +64,15 @@ export default function CaseStudyDialog({
           {project.title}
         </h3>
         <p className="mt-2 text-muted">{project.subtitle}</p>
+        <Metrics items={project.metrics} className="mt-4" />
+        {project.caseStudy && (
+          <Link
+            href={`/projects/${project.slug}`}
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-lime px-5 py-2.5 text-sm font-medium text-on-lime transition-colors hover:bg-lime-soft"
+          >
+            Read the full case study <ArrowUpRight size={15} aria-hidden />
+          </Link>
+        )}
 
         {project.video && (
           <div className="mt-8">

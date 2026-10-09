@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from "lucide-react";
 import type { Project } from "@/lib/data";
 import Chip from "../ui/Chip";
+import Metrics from "../ui/Metrics";
 import ProjectLinks from "../ui/ProjectLinks";
 import ProjectVisual from "./ProjectVisual";
 import CaseStudyDialog from "./CaseStudyDialog";
@@ -248,6 +249,7 @@ export default function ProjectCarousel({ projects }: { projects: Project[] }) {
           <p className="eyebrow text-lime">{current.tag}</p>
           <h3 className="display mt-3 text-5xl sm:text-6xl">{current.title}</h3>
           <p className="mt-1 text-subtle">{current.subtitle}</p>
+          <Metrics items={current.metrics} className="mt-4" />
           <p className="mt-5 leading-relaxed text-muted">{current.summary}</p>
         </div>
         <div className="flex flex-col gap-6 md:col-span-5 md:items-start md:pt-8">

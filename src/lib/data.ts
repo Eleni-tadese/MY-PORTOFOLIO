@@ -8,8 +8,17 @@ export type Project = {
   summary: string;
   highlights: string[];
   stack: string[];
+  /** Short outcome numbers shown under the title, e.g. "458 tests". */
+  metrics?: string[];
   /** What I personally did on the project. */
   role?: string;
+  /** Long-form case study at /projects/[slug]. */
+  caseStudy?: {
+    problem: string;
+    approach: string;
+    /** Things I'd change next time; the section is hidden until filled in. */
+    improve?: string[];
+  };
   live: string | null;
   code: string | null;
   images: Shot[];
@@ -96,7 +105,14 @@ export const projects: Project[] = [
     tag: "2nd Place — AGT-HUB Hackathon",
     summary:
       "A platform that replaces paper lists and spreadsheets for a student fellowship: registration, courses, attendance, mentorship families, private counseling and donations, in English, Amharic and Afaan Oromoo.",
+    metrics: ["8 roles", "3 languages", "458 tests"],
     role: "Full-stack developer. Built the Django REST API, the React and TypeScript interface, the database design, Docker setup, tests and CI.",
+    caseStudy: {
+      problem:
+        "The student fellowship ran registration, courses, attendance, mentorship families, private counseling and donations on paper lists and spreadsheets.",
+      approach:
+        "One platform for the whole fellowship, built in a 2-week hackathon and available in English, Amharic and Afaan Oromoo. A Django REST API enforces every permission on the server, and a React and TypeScript interface serves each of the 8 roles.",
+    },
     highlights: [
       "Role-based access for 8 roles, enforced on the server, with JWT authentication and rate limiting.",
       "Bulk registration from Excel with printable login slips, plus undo for imports, family distribution and yearly rollover.",
@@ -107,9 +123,9 @@ export const projects: Project[] = [
     live: "https://finot.pages.dev",
     code: "https://github.com/AGT-HUB-ASTU-Gibi-Gubaie/hackathon-2026-HIRUY",
     images: [
-      { src: "/projects/finot-home.webp", alt: "Finot home page in English" },
+      { src: "/projects/finot-home.webp", alt: "Finot home page" },
+      { src: "/projects/finot-student.webp", alt: "Finot student dashboard with events, attendance and family" },
       { src: "/projects/finot-admin.webp", alt: "Finot admin overview with users, families, events and donations" },
-      { src: "/projects/finot-home-amharic.webp", alt: "Finot home page in Amharic" },
     ],
   },
   {
@@ -126,7 +142,11 @@ export const projects: Project[] = [
     stack: ["Next.js", "Redux", "Go"],
     live: "https://srahub-web.firaolkef.workers.dev/",
     code: "https://github.com/A2SV-ASTU/srahub",
-    images: [{ src: "/projects/srahub-home.webp", alt: "SraHub home page" }],
+    metrics: ["17 contributors", "Live in production"],
+    images: [
+      { src: "/projects/srahub-home.webp", alt: "SraHub home page" },
+      { src: "/projects/srahub-dashboard.webp", alt: "SraHub job seeker dashboard with open positions" },
+    ],
   },
   {
     slug: "evangadi-forum",
@@ -143,7 +163,7 @@ export const projects: Project[] = [
     stack: ["React", "Tailwind CSS", "Node.js", "Express", "MySQL"],
     live: "https://evangadi-forum-bci5-pi.vercel.app/login",
     code: "https://github.com/Eleni-tadese/evangadi-forum",
-    images: [],
+    images: [{ src: "/projects/evangadi-questions.webp", alt: "Evangadi Forum question list" }],
   },
   {
     slug: "job-match-tracker",
