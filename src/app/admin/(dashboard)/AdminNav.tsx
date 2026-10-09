@@ -12,7 +12,7 @@ const items = [
   { href: "/admin/experience", label: "Experience", icon: Briefcase },
   { href: "/admin/skills", label: "Skills", icon: Wrench },
   { href: "/admin/credentials", label: "Credentials", icon: Award },
-  { href: "/admin/contact", label: "Contact & CV", icon: Mail },
+  { href: "/admin/contact", label: "Contact", icon: Mail },
 ];
 
 export default function AdminNav() {

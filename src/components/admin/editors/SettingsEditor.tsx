@@ -83,6 +83,22 @@ export default function SettingsEditor({
               </div>
               {err("profile.photo") && <p className="text-xs text-danger">{err("profile.photo")}</p>}
             </FieldGroup>
+            <FieldGroup title="CV" description="Used by the “View CV” button. Upload a PDF or paste a link.">
+              {p.cv && (
+                <a href={p.cv} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-lime underline-offset-4 hover:underline">
+                  <FileText size={15} aria-hidden /> Current CV
+                </a>
+              )}
+              <Uploader kind="cv" label={p.cv ? "Replace CV (PDF)" : "Upload CV (PDF)"} onUploaded={(f) => setP({ cv: f.url, cvPublicId: f.publicId })} />
+              <TextField
+                label="…or link to a document"
+                hint="e.g. a Google Drive link. Leave empty to hide the button."
+                type="url"
+                value={p.cv ?? ""}
+                onChange={(cv) => setP({ cv, cvPublicId: null })}
+                error={err("profile.cv")}
+              />
+            </FieldGroup>
           </>
         )}
 
@@ -118,27 +134,11 @@ export default function SettingsEditor({
           <>
             <FieldGroup title="Contact links">
               <TextField label="Email" type="email" value={s.email} onChange={(email) => setS({ email })} error={err("socials.email")} />
-              <TextField label="GitHub URL" type="url" value={s.github} onChange={(github) => setS({ github })} error={err("socials.github")} />
-              <TextField label="LinkedIn URL" type="url" value={s.linkedin} onChange={(linkedin) => setS({ linkedin })} error={err("socials.linkedin")} />
-              <TextField label="LeetCode URL" hint="Optional" type="url" value={s.leetcode ?? ""} onChange={(v) => setS({ leetcode: v })} error={err("socials.leetcode")} />
-              <TextField label="Codeforces URL" hint="Optional" type="url" value={s.codeforces ?? ""} onChange={(v) => setS({ codeforces: v })} error={err("socials.codeforces")} />
+              <TextField label="GitHub URL" hint="Contact buttons and “Practice projects on GitHub” under Work" type="url" value={s.github} onChange={(github) => setS({ github })} error={err("socials.github")} />
+              <TextField label="LinkedIn URL" hint="Contact buttons" type="url" value={s.linkedin} onChange={(linkedin) => setS({ linkedin })} error={err("socials.linkedin")} />
+              <TextField label="LeetCode URL" hint="Optional — Problem Solving card in Skills" type="url" value={s.leetcode ?? ""} onChange={(v) => setS({ leetcode: v })} error={err("socials.leetcode")} />
+              <TextField label="Codeforces URL" hint="Optional — Problem Solving card in Skills" type="url" value={s.codeforces ?? ""} onChange={(v) => setS({ codeforces: v })} error={err("socials.codeforces")} />
               <TextField label="Upwork URL" hint="Optional — shown in Contact when set" type="url" value={s.upwork ?? ""} onChange={(v) => setS({ upwork: v })} error={err("socials.upwork")} />
-            </FieldGroup>
-            <FieldGroup title="CV" description="Used by the “View CV” button in the hero.">
-              {p.cv && (
-                <a href={p.cv} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-lime underline-offset-4 hover:underline">
-                  <FileText size={15} aria-hidden /> Current CV
-                </a>
-              )}
-              <Uploader kind="cv" label={p.cv ? "Replace CV (PDF)" : "Upload CV (PDF)"} onUploaded={(f) => setP({ cv: f.url, cvPublicId: f.publicId })} />
-              <TextField
-                label="…or link to a document"
-                hint="e.g. a Google Drive link. Leave empty to hide the button."
-                type="url"
-                value={p.cv ?? ""}
-                onChange={(cv) => setP({ cv, cvPublicId: null })}
-                error={err("profile.cv")}
-              />
             </FieldGroup>
           </>
         )}

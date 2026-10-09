@@ -14,7 +14,7 @@ export default async function AdminHome() {
     { href: "/admin/experience", title: "Experience", detail: `${content.experience.length} roles` },
     { href: "/admin/skills", title: "Skills", detail: `${content.skillGroups.length} groups` },
     { href: "/admin/credentials", title: "Credentials", detail: `${content.education.length} education, ${content.certificates.length} certificates` },
-    { href: "/admin/contact", title: "Contact & CV", detail: content.socials.email },
+    { href: "/admin/contact", title: "Contact", detail: content.socials.email },
   ];
   const checks = [
     { ok: hasDatabase() && !problem, label: "Database connected" },

@@ -7,8 +7,8 @@ export default async function Page() {
   return (
     <>
       <PageHeader
-        title="Contact & CV"
-        description="Email, profile links and the CV behind the “View CV” button."
+        title="Contact"
+        description="Email and profile links (GitHub, LinkedIn, LeetCode, Codeforces, Upwork)."
         problem={problem}
       />
       <SettingsEditor

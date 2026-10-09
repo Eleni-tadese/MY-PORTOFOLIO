@@ -16,8 +16,8 @@ export default function About({
 }) {
   const { focus } = profile;
   const credentials = [
-    ...education.map((e) => ({ icon: GraduationCap, title: e.degree, by: e.school })),
-    ...certificates.map((c) => ({ icon: Award, title: c.title, by: c.issuer })),
+    ...education.map((e) => ({ icon: GraduationCap, title: e.degree, by: e.school, url: null })),
+    ...certificates.map((c) => ({ icon: Award, title: c.title, by: c.issuer, url: c.url })),
   ];
 
   return (
@@ -92,13 +92,25 @@ export default function About({
         {/* Credentials strip */}
         <Reveal className="lg:col-span-12">
           <ul className="grid divide-y divide-border rounded-3xl border border-border bg-surface md:grid-cols-3 md:divide-x md:divide-y-0">
-            {credentials.map(({ icon: Icon, title, by }) => (
+            {credentials.map(({ icon: Icon, title, by, url }) => (
               <li key={title} className="flex items-start gap-4 p-6">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border-strong text-lime">
                   <Icon size={18} aria-hidden />
                 </span>
                 <span>
-                  <span className="block font-medium">{title}</span>
+                  {url ? (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group inline-flex items-start gap-1 font-medium transition-colors hover:text-lime"
+                    >
+                      {title}
+                      <ArrowUpRight size={15} aria-hidden className="mt-1 shrink-0 text-subtle group-hover:text-lime" />
+                    </a>
+                  ) : (
+                    <span className="block font-medium">{title}</span>
+                  )}
                   <span className="mt-0.5 block text-sm text-subtle">{by}</span>
                 </span>
               </li>
