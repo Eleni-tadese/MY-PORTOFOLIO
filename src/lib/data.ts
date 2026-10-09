@@ -164,7 +164,7 @@ export const projects: Project[] = [
     live: "https://evangadi-forum-bci5-pi.vercel.app/login",
     code: "https://github.com/Eleni-tadese/evangadi-forum",
     images: [
-      { src: "/projects/evangadi-questions.webp", alt: "Evangadi Forum question list with search and pagination" },
+      { src: "/projects/evangadi-list.webp", alt: "Evangadi Forum question list with search and pagination" },
       { src: "/projects/evangadi-question.webp", alt: "Evangadi Forum question with answers, and edit and delete on your own answer" },
     ],
   },
