@@ -1,17 +1,24 @@
 import { Fragment } from "react";
 import { ArrowUpRight, Award, GraduationCap, Sparkles, Wrench } from "lucide-react";
-import { certificates, education, profile } from "@/lib/data";
+import type { Certificate, Education, Profile } from "@/content/types";
 import GlowCard from "./ui/GlowCard";
 import Reveal from "./ui/Reveal";
 import { Section, SectionHeading } from "./ui/Section";
 
-const credentials = [
-  { icon: GraduationCap, title: education.degree, by: education.school },
-  ...certificates.map((c) => ({ icon: Award, title: c.title, by: c.issuer })),
-];
-
-export default function About() {
+export default function About({
+  profile,
+  education,
+  certificates,
+}: {
+  profile: Profile;
+  education: Education[];
+  certificates: Certificate[];
+}) {
   const { focus } = profile;
+  const credentials = [
+    ...education.map((e) => ({ icon: GraduationCap, title: e.degree, by: e.school })),
+    ...certificates.map((c) => ({ icon: Award, title: c.title, by: c.issuer })),
+  ];
 
   return (
     <Section id="about" labelledBy="about-title">

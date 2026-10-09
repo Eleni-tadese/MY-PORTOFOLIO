@@ -1,7 +1,6 @@
 import { ArrowUp } from "lucide-react";
-import { profile } from "@/lib/data";
 
-export default function Footer() {
+export default function Footer({ name }: { name: string }) {
   return (
     <footer className="overflow-hidden border-t border-border px-5 pt-10 sm:px-8">
       <div className="mx-auto max-w-6xl">
@@ -26,7 +25,7 @@ export default function Footer() {
         </p>
 
         <p className="border-t border-border py-6 text-center text-xs text-subtle">
-          © {new Date().getFullYear()} {profile.name}. Built with Next.js,
+          © {new Date().getFullYear()} {name}. Built with Next.js,
           TypeScript &amp; Tailwind CSS.
         </p>
       </div>

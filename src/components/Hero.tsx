@@ -3,11 +3,11 @@ import { ArrowDownRight } from "lucide-react";
 import ParticleField from "./ParticleField";
 import Button from "./ui/Button";
 import RoleRotator from "./motion/RoleRotator";
-import { profile, socials } from "@/lib/data";
+import type { Profile } from "@/content/types";
 
 const delay = (ms: number) => ({ "--rise-delay": `${ms}ms` }) as React.CSSProperties;
 
-export default function Hero() {
+export default function Hero({ profile }: { profile: Profile }) {
   return (
     <section
       id="home"
@@ -50,9 +50,11 @@ export default function Hero() {
             <Button href="#work">
               View My Work <ArrowDownRight size={16} aria-hidden />
             </Button>
-            <Button href={socials.cv} variant="ghost">
-              View CV
-            </Button>
+            {profile.cv && (
+              <Button href={profile.cv} variant="ghost">
+                View CV
+              </Button>
+            )}
             <Button href="#contact" variant="ghost">
               Contact Me
             </Button>

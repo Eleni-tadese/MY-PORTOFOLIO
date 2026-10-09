@@ -1,11 +1,11 @@
 import { ArrowUpRight } from "lucide-react";
-import { projects, socials } from "@/lib/data";
+import type { Project } from "@/content/types";
 import Reveal from "./ui/Reveal";
 import { Section, SectionHeading } from "./ui/Section";
 import ProjectCarousel from "./projects/ProjectCarousel";
 import { GithubIcon } from "./icons";
 
-export default function Projects() {
+export default function Projects({ projects, github }: { projects: Project[]; github: string }) {
   return (
     <Section id="work" labelledBy="work-title" className="overflow-x-clip">
       <SectionHeading
@@ -26,7 +26,7 @@ export default function Projects() {
 
       <Reveal className="mx-auto mt-14 max-w-4xl">
         <a
-          href={`${socials.github}?tab=repositories`}
+          href={`${github}?tab=repositories`}
           target="_blank"
           rel="noreferrer"
           className="group flex items-center justify-between gap-4 border-t border-border pt-6 text-muted transition-colors hover:text-lime"

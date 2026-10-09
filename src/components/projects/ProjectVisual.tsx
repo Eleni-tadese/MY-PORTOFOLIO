@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Project, Shot } from "@/lib/data";
+import type { Project, Shot } from "@/content/types";
 
 /** Browser-window frame around a screenshot, or a typographic poster if none. */
 export default function ProjectVisual({

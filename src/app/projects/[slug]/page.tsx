@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import { profile, projects } from "@/lib/data";
+import { getSiteContent } from "@/lib/content";
 import Chip from "@/components/ui/Chip";
 import Metrics from "@/components/ui/Metrics";
 import ProjectLinks from "@/components/ui/ProjectLinks";
@@ -11,12 +11,10 @@ import ProjectVisual from "@/components/projects/ProjectVisual";
 
 type Params = { slug: string };
 
-const withCaseStudy = () => projects.filter((p) => p.caseStudy);
-
-export const dynamicParams = false;
-
-export function generateStaticParams(): Params[] {
-  return withCaseStudy().map((p) => ({ slug: p.slug }));
+// Pre-render existing case studies; new ones are rendered on first visit and cached.
+export async function generateStaticParams(): Promise<Params[]> {
+  const { projects } = await getSiteContent();
+  return projects.filter((p) => p.caseStudy).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -25,6 +23,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const { projects, profile } = await getSiteContent();
   const project = projects.find((p) => p.slug === slug);
   if (!project) return {};
   return {
@@ -69,6 +68,7 @@ function Bullets({ items }: { items: string[] }) {
 
 export default async function CaseStudyPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
+  const { projects, profile } = await getSiteContent();
   const project = projects.find((p) => p.slug === slug);
   if (!project?.caseStudy) notFound();
 
@@ -96,7 +96,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
             <ArrowLeft size={16} aria-hidden /> Back to work
           </Link>
           <Link href="/" className="display text-2xl">
-            Eleni<span className="text-lime">.</span>
+            {profile.name.split(" ")[0]}<span className="text-lime">.</span>
           </Link>
         </nav>
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
@@ -8,22 +9,39 @@ import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Effects from "@/components/Effects";
+import { getSiteContent } from "@/lib/content";
 
-export default function Home() {
+export async function generateMetadata(): Promise<Metadata> {
+  const { profile } = await getSiteContent();
+  return {
+    title: `${profile.name} — ${profile.roles[1] ?? profile.roles[0] ?? "Portfolio"}`,
+    description: profile.intro,
+  };
+}
+
+export default async function Home() {
+  const c = await getSiteContent();
+  const featured = c.projects.filter((p) => p.featured);
+
   return (
     <>
       <Effects />
-      <Navbar />
+      <Navbar brand={c.profile.name.split(" ")[0]} />
       <main id="main">
-        <Hero />
-        <Marquee />
-        <About />
-        <Projects />
-        <Experience />
-        <Skills />
-        <Contact />
+        <Hero profile={c.profile} />
+        <Marquee groups={c.skillGroups} />
+        <About profile={c.profile} education={c.education} certificates={c.certificates} />
+        <Projects projects={featured} github={c.socials.github} />
+        <Experience items={c.experience} />
+        <Skills
+          a2sv={c.profile.a2sv}
+          socials={c.socials}
+          skillGroups={c.skillGroups}
+          projects={c.projects}
+        />
+        <Contact socials={c.socials} />
       </main>
-      <Footer />
+      <Footer name={c.profile.name} />
     </>
   );
 }

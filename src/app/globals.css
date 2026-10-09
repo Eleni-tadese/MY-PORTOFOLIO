@@ -19,6 +19,8 @@
   --color-lime-soft: #f0ffa3;
   --color-lime-deep: #b9d12c;
   --color-on-lime: #0f0f0f;
+  /* Admin-only feedback colour (never used on the public site). */
+  --color-danger: #ff8f80;
 
   --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -354,4 +356,10 @@ dialog[open] {
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* ---- Admin live preview: show content immediately, no scroll reveals ---- */
+.admin-preview .reveal {
+  opacity: 1 !important;
+  transform: none !important;
 }

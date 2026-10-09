@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from "lucide-react";
-import type { Project } from "@/lib/data";
+import type { Project } from "@/content/types";
 import Chip from "../ui/Chip";
 import Metrics from "../ui/Metrics";
 import ProjectLinks from "../ui/ProjectLinks";

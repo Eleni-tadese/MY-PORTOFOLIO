@@ -1,62 +1,62 @@
 # Eleni Tadese — Portfolio
 
-Rebuilt in Next.js 16 (App Router) + TypeScript + Tailwind CSS v4, with your
-locked lime/near-black palette and the effects you specced: floating pill
-navbar with wavy-underline hover, particle hero, rotating gradient avatar
-ring, gradient-border glow project cards, an alternating editorial layout for
-featured projects, and a draggable/autoplaying carousel for the rest.
+Next.js 16 (App Router) · TypeScript · Tailwind CSS v4 · Postgres (Neon) via Drizzle · Cloudinary.
 
-## Getting started
+All site content is edited in the admin dashboard at **`/admin`**. The public
+pages are statically generated and refreshed automatically whenever you save.
 
-```bash
-npm install
-npm run dev
-```
+## How it fits together
 
-Open http://localhost:3000.
+| Piece | Where |
+| --- | --- |
+| Database schema | `src/db/schema.ts` (migrations in `drizzle/`) |
+| Content loader (cached, with fallback) | `src/lib/content.ts` |
+| Seed / fallback content | `src/content/seed.ts` |
+| Admin pages | `src/app/admin/(dashboard)/…` |
+| Admin Server Actions (all writes) | `src/app/admin/actions.ts` |
+| Input validation | `src/lib/validation.ts` |
+| Auth (session, rate limit) | `src/lib/auth/*`, `src/proxy.ts` |
+| Upload signing | `src/app/api/admin/upload-signature/route.ts` |
 
-## Restore Google Fonts
+- **Caching:** pages read content through `getSiteContent()`, cached under one
+  tag. Every admin save calls `revalidateContent()`, so the next visit renders
+  fresh content; everything else is served statically.
+- **Fallbacks:** with no `DATABASE_URL` or an empty database the site uses
+  `src/content/seed.ts`. If the database is down during a build, the seed is
+  used; if it goes down later, visitors keep getting the last published pages.
+- **Security:** one admin account from environment variables (bcrypt hash),
+  an 8-hour signed httpOnly session cookie, login rate-limited to 5 failures
+  per IP per 15 minutes, `/admin` and `/api/admin` guarded in `proxy.ts` *and*
+  in every page/action, and every input validated with Zod on the server.
+  Image/CV URLs must point at your Cloudinary account or this site.
 
-This was built in a sandbox with no access to fonts.googleapis.com, so
-Space Grotesk / Inter currently load via system-font fallback stacks. On your
-machine (with normal internet), switch back to `next/font/google` for crisper
-typography:
+## Setup
 
-1. In `src/app/layout.tsx`, uncomment the `next/font/google` import and the
-   two font consts (see the comment block at the top of the file), and add
-   `${spaceGrotesk.variable} ${inter.variable}` back onto the `<html>`
-   className.
-2. In `src/app/globals.css`, swap the `--font-display` / `--font-body` lines
-   back to `var(--font-space-grotesk)` / `var(--font-inter)` (also noted in a
-   comment right above them).
+1. **Install:** `npm install`
+2. **Environment:** copy `.env.example` to `.env.local` and fill it in:
+   - `DATABASE_URL` — Neon **pooled** connection string.
+   - `ADMIN_EMAIL` — the email you'll sign in with.
+   - `ADMIN_PASSWORD_HASH` — run `npm run admin:hash` and paste the output.
+   - `SESSION_SECRET` — 32+ random characters (command in `.env.example`).
+   - `CLOUDINARY_*` — from your Cloudinary dashboard.
+3. **Database:** `npm run db:migrate` then `npm run db:seed` (imports the
+   current content; it won't overwrite existing data unless you pass
+   `-- --force`).
+4. **Run:** `npm run dev` → http://localhost:3000 and http://localhost:3000/admin
 
-## Add real project screenshots
+## Scripts
 
-`Projects.tsx` currently renders an empty placeholder tile
-(`.glow-card aspect-[4/3]`) for each featured project. You mentioned you
-already have image assets in `/public` (`f/f1–f4`, `e/e1–e4`, `a/a1–a3`, plus
-a profile photo). Drop them into `public/` here and swap each placeholder
-`<div>` for a Next.js `<Image>` pointing at the matching file — the `image`
-field is already present on each entry in `src/lib/data.ts` for this.
+| Command | What it does |
+| --- | --- |
+| `npm run dev` / `build` / `start` | Next.js |
+| `npm run db:generate` | Create a new migration after editing `src/db/schema.ts` |
+| `npm run db:migrate` | Apply migrations to `DATABASE_URL` |
+| `npm run db:seed` | Seed an empty database from `src/content/seed.ts` |
+| `npm run db:studio` | Browse the database (Drizzle Studio) |
+| `npm run admin:hash` | Generate `ADMIN_PASSWORD_HASH` for a new password |
 
-## Add your profile photo
+## Changing the admin password
 
-`Hero.tsx` currently renders "ET" inside the avatar ring. Replace the initials
-`<div>` with an `<Image>` of your headshot once you add it to `public/`.
-
-## Deploy
-
-Push to GitHub and import into Vercel, or run `vercel` from this folder — no
-special config needed.
-
-## Structure
-
-```
-src/
-  app/            # layout, global styles, page assembly
-  components/      # Navbar, Hero, About, Skills, Projects, ProjectCarousel,
-                    # Contact, Footer, icons (inline GitHub/LinkedIn SVGs)
-  lib/data.ts      # all content — experience, education, skills, projects,
-                    # social links — edit here to update copy without
-                    # touching component code
-```
+Run `npm run admin:hash`, put the new value in `ADMIN_PASSWORD_HASH` (locally
+and on your host), and redeploy. To sign out every session immediately, also
+change `SESSION_SECRET`.

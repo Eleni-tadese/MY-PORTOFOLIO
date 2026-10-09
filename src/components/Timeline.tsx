@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { experience } from "@/lib/data";
-
-type Item = (typeof experience)[number];
+import { isCurrent, periodLabel, type Experience as Item } from "@/content/types";
 
 /** Vertical timeline whose line fills as you scroll. */
 export default function Timeline({ items }: { items: Item[] }) {
@@ -50,7 +48,7 @@ export default function Timeline({ items }: { items: Item[] }) {
       <span aria-hidden className="absolute bottom-0 left-0 top-0 w-px bg-border" />
       <span aria-hidden className="timeline-fill absolute bottom-0 left-0 top-0 w-px bg-lime" />
       {items.map((item) => (
-        <li key={item.role} className="relative pb-12 last:pb-0">
+        <li key={`${item.role}-${item.org}`} className="relative pb-12 last:pb-0">
           <span
             data-dot
             aria-hidden
@@ -58,8 +56,8 @@ export default function Timeline({ items }: { items: Item[] }) {
           />
           <div className="grid gap-x-10 gap-y-2 md:grid-cols-[11rem_1fr]">
             <p className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-2 pt-2 text-subtle">
-              {item.period}
-              {item.current && (
+              {periodLabel(item)}
+              {isCurrent(item) && (
                 <span className="rounded-full border border-lime/40 px-2 py-0.5 text-[10px] text-lime">
                   Now
                 </span>

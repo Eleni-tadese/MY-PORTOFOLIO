@@ -1,7 +1,4 @@
-import { skillGroups } from "@/lib/data";
-
-const all = skillGroups.flatMap((g) => g.items);
-const half = Math.ceil(all.length / 2);
+import type { SkillGroup } from "@/content/types";
 
 function Row({
   items,
@@ -41,7 +38,9 @@ function Row({
  * Full skill set scrolling right → left in two rows at different speeds.
  * Decorative (the Skills section lists them accessibly); pauses on hover.
  */
-export default function Marquee() {
+export default function Marquee({ groups }: { groups: SkillGroup[] }) {
+  const all = groups.flatMap((g) => g.items);
+  const half = Math.ceil(all.length / 2);
   return (
     <div
       aria-hidden

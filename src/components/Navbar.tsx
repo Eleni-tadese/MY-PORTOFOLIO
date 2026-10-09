@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { nav } from "@/lib/data";
+import { nav } from "@/lib/nav";
 
 const links = nav.slice(1);
 
-export default function Navbar() {
+export default function Navbar({ brand }: { brand: string }) {
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -99,8 +99,8 @@ export default function Navbar() {
         aria-label="Primary"
         className="flex w-full max-w-fit items-center justify-between gap-4 rounded-full border border-border-strong bg-surface/80 py-1.5 pl-5 pr-1.5 shadow-[0_12px_40px_-16px_rgb(0_0_0/0.8)] backdrop-blur-xl max-lg:min-w-[min(100%,22rem)]"
       >
-        <a href="#home" aria-label="Eleni Tadese — home" className="display pr-2 text-2xl">
-          Eleni<span className="text-lime">.</span>
+        <a href="#home" aria-label={`${brand} — home`} className="display pr-2 text-2xl">
+          {brand}<span className="text-lime">.</span>
         </a>
 
         <ul ref={listRef} className="relative hidden items-center lg:flex">
@@ -152,7 +152,7 @@ export default function Navbar() {
         >
           <div className="flex items-center justify-between">
             <span className="display text-2xl">
-              Eleni<span className="text-lime">.</span>
+              {brand}<span className="text-lime">.</span>
             </span>
             <button
               type="button"

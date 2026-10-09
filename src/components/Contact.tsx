@@ -1,17 +1,17 @@
 import { ArrowUpRight } from "lucide-react";
-import { socials } from "@/lib/data";
+import type { Socials } from "@/content/types";
 import { GithubIcon, LinkedinIcon } from "./icons";
 import Reveal from "./ui/Reveal";
 import { Section } from "./ui/Section";
 import CopyEmail from "./CopyEmail";
 
-const channels = [
-  { label: "LinkedIn", href: socials.linkedin, Icon: LinkedinIcon },
-  { label: "GitHub", href: socials.github, Icon: GithubIcon },
-  ...(socials.upwork ? [{ label: "Upwork", href: socials.upwork, Icon: ArrowUpRight }] : []),
-];
+export default function Contact({ socials }: { socials: Socials }) {
+  const channels = [
+    { label: "LinkedIn", href: socials.linkedin, Icon: LinkedinIcon },
+    { label: "GitHub", href: socials.github, Icon: GithubIcon },
+    ...(socials.upwork ? [{ label: "Upwork", href: socials.upwork, Icon: ArrowUpRight }] : []),
+  ].filter((c) => c.href);
 
-export default function Contact() {
   return (
     <Section id="contact" labelledBy="contact-title">
       <Reveal className="relative isolate overflow-hidden rounded-[2.5rem] border border-border bg-surface px-6 py-16 text-center sm:px-12 sm:py-20">

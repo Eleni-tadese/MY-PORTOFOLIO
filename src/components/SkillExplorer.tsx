@@ -1,10 +1,17 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { projectsUsing, skillGroups } from "@/lib/data";
+import type { Project, SkillGroup } from "@/content/types";
+import { projectsUsing } from "@/content/utils";
 
 /** Tabbed skill categories; each skill shows which projects use it. */
-export default function SkillExplorer() {
+export default function SkillExplorer({
+  skillGroups,
+  projects,
+}: {
+  skillGroups: SkillGroup[];
+  projects: Project[];
+}) {
   const [active, setActive] = useState(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const group = skillGroups[active];
@@ -73,7 +80,7 @@ export default function SkillExplorer() {
       >
         <ul key={group.title} className="grid gap-3 sm:grid-cols-2">
           {group.items.map((skill, i) => {
-            const used = projectsUsing(skill);
+            const used = projectsUsing(projects, skill);
             return (
               <li
                 key={skill}

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { Project } from "@/lib/data";
+import type { Project } from "@/content/types";
 import Chip from "../ui/Chip";
 import Metrics from "../ui/Metrics";
 import ProjectLinks from "../ui/ProjectLinks";
@@ -82,7 +82,7 @@ export default function CaseStudyDialog({
               muted
               playsInline
               preload="metadata"
-              poster={project.video.poster}
+              poster={project.video.poster ?? undefined}
               className="mt-4 w-full rounded-2xl border border-border-strong bg-bg"
             >
               <source src={project.video.src} />
